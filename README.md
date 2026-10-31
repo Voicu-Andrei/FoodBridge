@@ -156,7 +156,7 @@ Open the **FoodBridge** folder and double-click:
 
 A window opens and does everything by itself:
 
-1. downloads the latest version of the app, if there is one,
+1. checks the internet connection and downloads the latest version of the app, if there is one,
 2. installs the app's packages (only the first time and after updates; takes a minute or two),
 3. **the first time only:** asks for your Expo **email and password**. Use the same account as Expo Go
    on the iPhone,
@@ -201,8 +201,26 @@ npx expo start --tunnel
 `npx expo login` is only needed once per computer; `npx expo whoami` shows which account is signed in.
 To update later, run `git pull` and then `npm ci` in the folder.
 
-`--tunnel` works on any network (home, university, mobile hotspot). If the phone and computer are on
-the **same Wi-Fi**, plain `npx expo start` loads faster.
+`--tunnel` works on any network (see [Which network?](#which-network-university-wi-fi-hotspot)). If the
+phone and computer are on the **same Wi-Fi** and it allows devices to see each other (most home
+networks do), plain `npx expo start` loads faster.
+
+### Which network? (university Wi-Fi, hotspot)
+
+- **The phone and computer do NOT need to be on the same Wi-Fi.** The launcher (and `--tunnel`) runs
+  the connection through Expo's servers, so each device just needs internet. The iPhone can even be on
+  mobile data.
+- **University or public Wi-Fi** (eduroam, a campus network, a café) usually works. If the network has
+  a login page, open any website in the browser first and log in.
+- **If it doesn't work**, the network is probably blocking the connection. The launcher tells you when it
+  can't reach Expo or the tunnel fails. Then use the iPhone as a hotspot:
+  1. On the iPhone: **Settings → Personal Hotspot → Allow Others to Join**.
+  2. Connect the computer to the iPhone's Wi-Fi.
+  3. Close the FoodBridge window and double-click `Start FoodBridge` again.
+
+  This uses some of the phone's mobile data.
+- If the window ever shows *"Tunnel connection has been closed"*, the connection dropped. Close the
+  window, double-click `Start FoodBridge` again and scan the new QR code.
 
 ### iOS Simulator (Mac only, optional)
 
@@ -232,6 +250,8 @@ one in, for example `owner@panera-schwabing.de` with password `demo1234` (every 
 | *"You're signed in to Expo CLI as X and to Expo Go as Y — these accounts need to match"* | Sign Expo Go (account icon, top right) in to the account the launcher window shows. Or switch the computer's account: close the window, run `npx expo logout` in the folder, and double-click `Start FoodBridge` again. |
 | *"…but not signed in to Expo Go"* or *"…not signed in to Expo CLI"* | Sign in on the side that's missing (step 1 for the phone; the launcher or `npx expo login` for the computer), then tap **Try Again**. |
 | *"There was a problem running the requested project"* / **502 Bad Gateway** | The QR code is old or the server stopped. Make sure the FoodBridge window is open and scan the QR code currently on screen. |
+| The window says *"Can't reach Expo's servers"* or *"FoodBridge stopped while starting"* | The computer has no internet or the Wi-Fi blocks the connection. Log in to the Wi-Fi in a browser, or connect the computer to the iPhone's Personal Hotspot (see [Which network?](#which-network-university-wi-fi-hotspot)), then try again. |
+| *"Tunnel connection has been closed"* in the window, or Expo Go keeps loading | The connection dropped. Close the window, start again and scan the new QR code. If it keeps happening, use the iPhone's hotspot. |
 | *"Project is incompatible with this version of Expo Go"* | Update Expo Go from the App Store. |
 | The window says *"Node.js is not installed"* | Do step 2, then double-click again. On Mac, check the PATH line in step 2. |
 | *"npx.ps1 cannot be loaded because running scripts is disabled"* (Windows, commands only) | Use the double-click launcher, or run `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned` once. |
