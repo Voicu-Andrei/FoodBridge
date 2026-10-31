@@ -82,8 +82,18 @@ Node.js **v24** from <https://nodejs.org/en/download> (choose version 24 → Win
 
 Open **Terminal** (Cmd + Space → type "Terminal" → Enter) and run these one at a time.
 
-1. Install **Homebrew** (skip if `brew -v` works). This also installs Git (Apple's command line tools);
-   it asks for your Mac password and may take a few minutes:
+1. Install **Git**. It's part of Apple's free Command Line Tools:
+
+   ```bash
+   xcode-select --install
+   ```
+
+   A window pops up: click **Install**, then **Agree**, and wait until it finishes (about 5–10 minutes).
+   If Terminal says the tools are *already installed*, Git is already there. (Typing any `git` command
+   on a Mac without Git shows the same pop-up.)
+
+2. Install **Homebrew** (skip if `brew -v` works). It asks for your Mac password and may take a few
+   minutes:
 
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -99,7 +109,7 @@ Open **Terminal** (Cmd + Space → type "Terminal" → Enter) and run these one 
    eval "$(/opt/homebrew/bin/brew shellenv)"
    ```
 
-2. Install **Node.js 24** and put it on your PATH:
+3. Install **Node.js 24** and put it on your PATH:
 
    ```bash
    brew install node@24
@@ -110,7 +120,7 @@ Open **Terminal** (Cmd + Space → type "Terminal" → Enter) and run these one 
 
    (On an older Intel Mac, use `/usr/local/opt/node@24/bin` instead of `/opt/homebrew/opt/node@24/bin`.)
 
-3. **Close Terminal and open a new window**, then check:
+4. **Close Terminal and open a new window**, then check:
 
    ```bash
    node -v
@@ -119,8 +129,8 @@ Open **Terminal** (Cmd + Space → type "Terminal" → Enter) and run these one 
    git --version
    ```
 
-No Homebrew? Download Node.js **v24** from <https://nodejs.org/en/download> (choose version 24 →
-macOS Installer), and run `xcode-select --install` to get Git.
+No Homebrew? Skip steps 2–3 and download Node.js **v24** from <https://nodejs.org/en/download>
+(choose version 24 → macOS Installer) and double-click the downloaded file to install it.
 
 ## Step 3 — Download the app (one time)
 
