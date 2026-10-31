@@ -29,8 +29,9 @@ anywhere.
 
 # How to run it (step by step)
 
-You run a small development server on your computer (Windows or Mac) and open the app on your iPhone
-with **Expo Go**. Steps 1–2 are one-time setup; after that you only need [step 4](#step-4--start-the-app).
+You run a small server on your computer (Windows or Mac) and open the app on your iPhone with
+**Expo Go**. Steps 1–3 are one-time setup. After that, **double-click `Start FoodBridge`** in the
+FoodBridge folder and scan the QR code.
 
 **You need:** an iPhone, a Windows PC or a Mac, internet on both, and a free Expo account.
 
@@ -40,8 +41,9 @@ with **Expo Go**. Steps 1–2 are one-time setup; after that you only need [step
 2. Create a free Expo account at <https://expo.dev/signup> (skip if you have one).
 3. Open Expo Go, tap the **account icon** (top right) and **sign in** with that account.
 
-> **Important:** the computer must be signed in to the **same Expo account** as Expo Go on the phone
-> (you do that in step 3). Everyone uses their own account; the project isn't tied to anyone's.
+> **Important:** the computer must be signed in to the **same Expo account** as Expo Go on the phone.
+> The launcher asks for it the first time. Everyone uses their own account; the project isn't tied to
+> anyone's.
 
 ## Step 2 — Install the tools on your computer (one time)
 
@@ -72,10 +74,6 @@ winget install --id OpenJS.NodeJS.LTS -e --source winget --version 24.22.1
 ```powershell
 node -v
 ```
-
-> If PowerShell later says *"npx.ps1 cannot be loaded because running scripts is disabled on this
-> system"*, run this once, then try again:
-> `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
 
 No winget? Download the installers instead: Git from <https://git-scm.com/download/win> and
 Node.js **v24** from <https://nodejs.org/en/download> (choose version 24 → Windows Installer).
@@ -124,74 +122,92 @@ Open **Terminal** (Cmd + Space → type "Terminal" → Enter) and run these one 
 No Homebrew? Download Node.js **v24** from <https://nodejs.org/en/download> (choose version 24 →
 macOS Installer), and run `xcode-select --install` to get Git.
 
-## Step 3 — Download the app and sign in (one time)
+## Step 3 — Download the app (one time)
 
-These commands are the same on **Windows (PowerShell)** and **Mac (Terminal)**. Run them one at a time.
+Same on **Windows (PowerShell)** and **Mac (Terminal)**. Run them one at a time:
 
-1. Download the code into a folder called `FoodBridge` and go into it:
+```bash
+cd ~/Desktop
+```
+```bash
+git clone https://github.com/Voicu-Andrei/FoodBridge.git
+```
 
-   ```bash
-   git clone https://github.com/Voicu-Andrei/FoodBridge.git
-   ```
-   ```bash
-   cd FoodBridge
-   ```
-
-2. Install the app's packages (takes a minute or two; warnings about "vulnerabilities" or "funding"
-   are normal and can be ignored):
-
-   ```bash
-   npm ci
-   ```
-
-3. Sign in to Expo with **the same account you used in Expo Go** on your phone:
-
-   ```bash
-   npx expo login
-   ```
-
-4. Check which account you're signed in with. It must match the one in Expo Go:
-
-   ```bash
-   npx expo whoami
-   ```
+This creates a **FoodBridge** folder on your Desktop.
 
 ## Step 4 — Start the app
 
-From inside the `FoodBridge` folder, run:
+### The easy way: double-click
 
+Open the **FoodBridge** folder and double-click:
+
+- **Mac:** `Start FoodBridge.command`
+- **Windows:** `Start FoodBridge.bat` (it may show as "Start FoodBridge" with a gear icon)
+
+A window opens and does everything by itself:
+
+1. downloads the latest version of the app, if there is one,
+2. installs the app's packages (only the first time and after updates; takes a minute or two),
+3. **the first time only:** asks for your Expo **email and password**. Use the same account as Expo Go
+   on the iPhone,
+4. shows a **QR code**.
+
+Then, on the iPhone:
+
+1. Open the **Camera** app and point it at the QR code.
+2. Tap the **Open in Expo Go** banner. The first load takes about 20–30 seconds.
+
+Keep the window open while you use the app. **Close the window to stop FoodBridge.** Every start
+shows a new QR code, so always scan the one currently on screen; an old one gives an error.
+
+First-time pop-ups you might see:
+
+- **Mac:** *"Terminal would like to access files in your Desktop folder"* → click **OK**.
+- **Mac:** *"node" wants to accept incoming network connections* → click **Allow**.
+- **Mac**, only if the folder was downloaded as a ZIP instead of with `git clone`: *"cannot be opened
+  because it is from an unidentified developer"* → Control-click the file → **Open** → **Open**.
+- **Windows**, only for a ZIP download: *"Windows protected your PC"* → **More info** → **Run anyway**.
+
+Tip (Mac): drag `Start FoodBridge.command` onto the right side of the Dock (next to the Trash) to start
+it from there with one click.
+
+### Or with commands
+
+From PowerShell or Terminal:
+
+```bash
+cd ~/Desktop/FoodBridge
+```
+```bash
+npm ci
+```
+```bash
+npx expo login
+```
 ```bash
 npx expo start --tunnel
 ```
 
-After a few seconds a **QR code** appears in the window.
-
-1. On the iPhone, open the **Camera** app and point it at the QR code.
-2. Tap the **Open in Expo Go** banner. The first load takes about 20–30 seconds.
-3. Keep the PowerShell / Terminal window open while you use the app. Press **Ctrl + C** in it to stop.
+`npx expo login` is only needed once per computer; `npx expo whoami` shows which account is signed in.
+To update later, run `git pull` and then `npm ci` in the folder.
 
 `--tunnel` works on any network (home, university, mobile hotspot). If the phone and computer are on
-the **same Wi-Fi**, plain `npx expo start` loads faster. On a Mac, click **Allow** if macOS asks whether
-"node" may accept incoming connections.
-
-**Every time you start the server you get a new QR code.** Always scan the one that's currently on
-screen; an old one gives an error.
-
-### Next time
-
-```bash
-cd FoodBridge
-```
-```bash
-npx expo start --tunnel
-```
-
-To get the latest version of the app first, run `git pull` and then `npm ci` inside the folder.
+the **same Wi-Fi**, plain `npx expo start` loads faster.
 
 ### iOS Simulator (Mac only, optional)
 
-If Xcode is installed, press **i** in the terminal after `npx expo start` to open the app in the iOS
+If Xcode is installed, run `npx expo start` in the folder and press **i** to open the app in the iOS
 Simulator. The simulator doesn't need the Expo account check.
+
+## Setting it up for a friend
+
+1. Do steps 1–3 on their iPhone and computer, with **their own** Expo account in Expo Go.
+2. Double-click `Start FoodBridge` once and sign in with that same account when the window asks.
+3. From then on they only double-click `Start FoodBridge` and scan the QR code. Updates you push to
+   GitHub arrive automatically the next time they start it.
+
+To switch the computer to a different Expo account later, run `npx expo logout` in the FoodBridge
+folder and double-click `Start FoodBridge` again.
 
 ## Logging in to the demo
 
@@ -203,13 +219,15 @@ one in, for example `owner@panera-schwabing.de` with password `demo1234` (every 
 
 | What you see | What to do |
 | --- | --- |
-| *"You're signed in to Expo CLI as X and to Expo Go as Y — these accounts need to match"* | Sign Expo Go (account icon, top right) in to the account `npx expo whoami` shows, or run `npx expo login` with the Expo Go account. If you switched the computer's account, stop the server (Ctrl + C) and start it again. |
-| *"…but not signed in to Expo Go"* or *"…not signed in to Expo CLI"* | Sign in on the side that's missing (step 1 for the phone, `npx expo login` for the computer), then tap **Try Again**. |
-| *"There was a problem running the requested project"* / **502 Bad Gateway** | The QR code is old or the server stopped. Make sure `npx expo start --tunnel` is running and scan the QR code currently on screen. |
+| *"You're signed in to Expo CLI as X and to Expo Go as Y — these accounts need to match"* | Sign Expo Go (account icon, top right) in to the account the launcher window shows. Or switch the computer's account: close the window, run `npx expo logout` in the folder, and double-click `Start FoodBridge` again. |
+| *"…but not signed in to Expo Go"* or *"…not signed in to Expo CLI"* | Sign in on the side that's missing (step 1 for the phone; the launcher or `npx expo login` for the computer), then tap **Try Again**. |
+| *"There was a problem running the requested project"* / **502 Bad Gateway** | The QR code is old or the server stopped. Make sure the FoodBridge window is open and scan the QR code currently on screen. |
 | *"Project is incompatible with this version of Expo Go"* | Update Expo Go from the App Store. |
-| *"npx.ps1 cannot be loaded because running scripts is disabled"* (Windows) | Run `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned` once, then try again. |
-| `node` or `git` "is not recognized" / "command not found" | Close the terminal and open a new one after installing. On Mac, check the PATH line in step 2. |
-| Anything else odd, or the app shows old code | Stop the server and start it with a clean cache: `npx expo start --tunnel --clear` |
+| The window says *"Node.js is not installed"* | Do step 2, then double-click again. On Mac, check the PATH line in step 2. |
+| *"npx.ps1 cannot be loaded because running scripts is disabled"* (Windows, commands only) | Use the double-click launcher, or run `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned` once. |
+| `node` or `git` "is not recognized" / "command not found" | Close the terminal and open a new one after installing. |
+| *"Permission denied"* when starting the Mac launcher | In Terminal, run `chmod +x ~/Desktop/FoodBridge/"Start FoodBridge.command"` once. |
+| Anything else odd, or the app shows old code | Close the window, then run `npx expo start --tunnel --clear` in the folder for a clean start. |
 
 ---
 
@@ -233,12 +251,13 @@ business (tap the avatar to switch) → Impact tab.
 - The impact figures are **demo values**. The assumptions (kg per meal, CO₂e per kg, weekly goal) live in
   `src/lib/impact.ts` (`IMPACT`); replace them with sourced figures before presenting
   them as facts.
-- The app depends on the laptop running `npx expo start`. Rehearse on the venue network (or a phone
-  hotspot with `--tunnel`) and keep a screen recording as a backup.
+- The app depends on the laptop running the FoodBridge window (`npx expo start`). Rehearse on the venue
+  network (or a phone hotspot) and keep a screen recording as a backup.
 
 ## Project structure
 
 ```
+Start FoodBridge.command / .bat   double-click launchers (Mac / Windows) → scripts/start.mjs
 src/app/            screens (Expo Router, file-based routes)
   (tabs)/           Offers, Map, Orders, Impact, Account
   offer/[id].tsx    offer detail + slide to reserve
