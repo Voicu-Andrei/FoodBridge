@@ -60,11 +60,16 @@ while (!(await expoReachable())) {
   await ask('Press Enter to try again (or close this window to stop).');
 }
 
+// Set when the fallback `npm install` below had to rewrite package-lock.json.
+const repairedMarker = join('node_modules', '.foodbridge-repaired');
+
 // 2. Latest version from GitHub. Not fatal: it just starts the copy on disk.
 if (existsSync('.git')) {
   say('Checking for updates...');
   const head = () => spawnSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).stdout?.trim();
   const before = head();
+  // Undo the fallback's lockfile rewrite so the pull can't conflict with it.
+  if (existsSync(repairedMarker)) spawnSync('git', ['checkout', '--', 'package-lock.json'], { stdio: 'ignore' });
   const pull = spawnSync('git', ['pull', '--ff-only', '--quiet'], { stdio: 'ignore', timeout: 60_000 });
   if (pull.error || pull.status !== 0) say('Could not check for updates, starting the version you have.');
   else say(head() === before ? 'Already up to date.' : 'Updated to the latest version.');
@@ -75,7 +80,13 @@ const lockHash = createHash('sha256').update(readFileSync('package-lock.json')).
 const stamp = join('node_modules', '.foodbridge-installed');
 if (!existsSync(stamp) || readFileSync(stamp, 'utf8') !== lockHash) {
   say('Installing packages. Only needed the first time and after updates; takes a minute or two...');
-  const install = spawnSync('npm ci --no-audit --no-fund --loglevel=error',{ shell: true, stdio: 'inherit' });
+  let install = spawnSync('npm ci --no-audit --no-fund --loglevel=error', { shell: true, encoding: 'utf8' });
+  if (install.status !== 0) {
+    // Different npm versions can disagree about the lockfile; `npm install` repairs it instead of refusing.
+    say('Retrying with a repair install...');
+    install = spawnSync('npm install --no-audit --no-fund --loglevel=error', { shell: true, stdio: 'inherit' });
+    if (install.status === 0) writeFileSync(repairedMarker, '');
+  }
   if (install.status !== 0) {
     fail('Installing packages failed. Check the internet connection, close any other FoodBridge window, and try again.');
   }
